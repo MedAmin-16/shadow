@@ -9,12 +9,16 @@ import type {
   EnhancedScannerFindings,
   EnhancedReporterOutput
 } from "@shared/schema";
+import type { ExploiterStealthFindings } from "@shared/stealth";
 import { runReconAgent } from "./recon";
 import { runScannerAgent } from "./scanner";
 import { runExploiterAgent } from "./exploiter";
+import { runStealthExploiterAgent } from "./stealthExploiter";
 import { runReporterAgent } from "./reporter";
 import { storage } from "../storage";
 import { generateAllReportFormats } from "../src/services/reportService";
+
+export { runStealthExploiterAgent } from "./stealthExploiter";
 
 const AGENT_SEQUENCE: AgentType[] = ["recon", "scanner", "exploiter", "reporter"];
 

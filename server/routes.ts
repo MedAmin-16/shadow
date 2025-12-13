@@ -40,6 +40,11 @@ import {
   getAnalysisTypes,
   parseSpec,
 } from "./src/controllers/apiSecurityController";
+import {
+  startCSPMScan,
+  getCSPMCost,
+  getProviderMisconfigurations,
+} from "./src/controllers/cspmController";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -90,6 +95,11 @@ export async function registerRoutes(
   app.post("/api/security/api/analyze", analyzeApiSpec);
   app.get("/api/security/api/types", getAnalysisTypes);
   app.post("/api/security/api/parse", parseSpec);
+
+  // CSPM (Cloud Security Posture Management) Routes
+  app.post("/api/cspm/scan", startCSPMScan);
+  app.get("/api/cspm/cost", getCSPMCost);
+  app.get("/api/cspm/checks/:provider", getProviderMisconfigurations);
 
   return httpServer;
 }
