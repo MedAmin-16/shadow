@@ -1,0 +1,18 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+.local/
+reports/
+# Node.js and TypeScript files
+/node_modules
+/dist
+
+# Logs and databases
+*.log
+*.db
+
+# Replit/Environment specific
+.replit
