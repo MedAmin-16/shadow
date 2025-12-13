@@ -97,8 +97,8 @@ export async function registerRoutes(
   app.post("/api/security/api/parse", parseSpec);
 
   // CSPM (Cloud Security Posture Management) Routes
-  app.post("/api/cspm/scan", startCSPMScan);
-  app.get("/api/cspm/cost", getCSPMCost);
+  app.post("/api/cspm/scan", scanRateLimiter, apiKeyAuth, startCSPMScan);
+  app.get("/api/cspm/cost", apiKeyAuth, getCSPMCost);
   app.get("/api/cspm/checks/:provider", getProviderMisconfigurations);
 
   return httpServer;

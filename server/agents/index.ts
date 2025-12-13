@@ -95,8 +95,30 @@ export async function runAgentPipeline(scanId: string, context?: PipelineContext
           
           case "exploiter":
             if (!scannerData) throw new Error("Scanner data required for exploiter");
-            exploiterData = await runExploiterAgent(scan.target, scannerData, onProgress);
-            result = exploiterData;
+            const useStealthMode = 'waf_ids_detected' in scannerData && scannerData.waf_ids_detected;
+            if (useStealthMode && (context?.planLevel === "ELITE" || context?.planLevel === "STANDARD")) {
+              const stealthResult = await runStealthExploiterAgent(scan.target, scannerData, {
+                userId: scan.userId,
+                scanId: scanId,
+                stealthLevel: context.planLevel === "ELITE" ? "aggressive" : "cautious",
+                adaptiveMode: true,
+                onProgress,
+              });
+              exploiterData = {
+                exploitAttempts: stealthResult.exploitAttempts.map(e => ({
+                  vulnerability: e.vulnerabilityTitle,
+                  success: e.success,
+                  technique: e.technique,
+                  evidence: e.evidence,
+                })),
+                accessGained: stealthResult.accessGained,
+                riskLevel: stealthResult.riskLevel,
+              };
+              result = exploiterData;
+            } else {
+              exploiterData = await runExploiterAgent(scan.target, scannerData, onProgress);
+              result = exploiterData;
+            }
             break;
           
           case "reporter":
